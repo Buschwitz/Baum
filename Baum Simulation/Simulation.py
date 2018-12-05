@@ -109,7 +109,7 @@ class Simulation:
             
             t.height += 1
             t.age += 1
-            if t.age > 10 and t.age < 50 and t.age % 5 == 0:
+            if t.age > 10 and t.age < 50 and t.age % 20 == 0:
                 sx=t.x+random.randint(-2, 2)
                 sy=t.y+random.randint(-3, 3)
                 if sx < 0 or sy < 0 or sx >= 100 or sy >= 100:
@@ -126,7 +126,7 @@ class Simulation:
 
     def removetree(self, t):
         index = self.trees.index(t)
-        print ("remove:", t, index)
+        #print ("remove:", t, index)
         del(self.trees[index])
         self.grid[t.y][t.x] = None
 
