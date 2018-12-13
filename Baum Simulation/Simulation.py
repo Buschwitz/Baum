@@ -9,9 +9,9 @@ class Simulation:
             row = []
             for y in range (100):
                 row.append (None)
-                
+
             self.grid.append(row)
-            
+
         self.year = 0
 
     def __repr__(self):
@@ -19,7 +19,24 @@ class Simulation:
 
     def __len__(self):
         return len(self.trees)
-    
+
+    def __eq__(self, other):
+        trees = list(self.trees)
+        otherTrees = list(other.trees)
+
+        for a in trees:
+            for b in otherTrees:
+                if a == b:
+                    trees.remove(a)
+                    otherTrees.remove(b)
+                    break
+
+        if len(trees) != 0 or len(otherTrees) != 0:
+            return False
+
+        return True
+
+
     def isfree(self, x, y):
         return self.treeat(x, y) is None
 
@@ -33,16 +50,16 @@ class Simulation:
 
         return None
     """
-    
+
     def addtreeat(self, x, y):
         t = Tree(x, y)
         self.addtree(t)
-        
+
     def addtree(self, t):
         #print ("add", t)
         self.trees.append(t)
         self.grid[t.y][t.x] = t
-        
+
     def reset(self):
         self.trees = []
         self.addtreeat(50, 50)
@@ -50,7 +67,7 @@ class Simulation:
     def agetree(self):
         agetree = [] # kein Unterschied?, warum alle ages = 0?
         ages = [t.age for t in self.trees]
-        
+
         for t in self.trees:
             agetree.append(ages.count(t.age))
 
@@ -58,25 +75,25 @@ class Simulation:
         print (agetree)
 
         lastage = None # außerhalb der Schleife unten
-        
+
         for age, count in zip(ages, agetree):
             if lastage != age:
                 print(age, "kommt", count, "mal vor")
-                
+
             lastage = age
- 
+
     def flash(self):
         # bei Negativformulierung: or statt and: not(a and b) == not a or not b
-        if self.year %5 != 0 or self.year < 15:                                             
+        if self.year %5 != 0 or self.year < 15:
             return
-        
+
         if random.random()>0.1:
             return
 
         if len(self.trees) == 0:
             return
 
-        
+
         index=random.randint(0, len(self.trees)-1)
         t=self.trees[index]
         t.flash = True
@@ -89,7 +106,7 @@ class Simulation:
 
     def stepyear(self):
         #self.flash()
-        
+
         seeds = self.steptrees()
 
         for s in seeds:
@@ -104,9 +121,9 @@ class Simulation:
                 t.decay += 1
                 if t.decay >= 20:
                     self.removetree(t)
-                    
+
                 continue
-            
+
             t.height += 1
             t.age += 1
             if t.age > 10 and t.age < 50 and t.age % 20 == 0:
@@ -130,7 +147,7 @@ class Simulation:
         del(self.trees[index])
         self.grid[t.y][t.x] = None
 
-        
+
     def info(self):
         for t in self.trees:
             print("Baum mit Alter", t.age, "und Höhe", t.height,"Baum tot", t.dead, t.x, t.y)
@@ -138,13 +155,13 @@ class Simulation:
     def draw(self):
         if len(self.trees) == 0:
             return
-        
+
         pad = 0
         xfrom = min([t.x for t in self.trees]) - pad
         xto = max([t.x for t in self.trees]) + 1 + pad
         yfrom = min([t.y for t in self.trees]) - pad
         yto = max([t.y for t in self.trees]) + 1 + pad
-        
+
         for y in range(yfrom, yto):
             for x in range(xfrom, xto):
                 t = self.treeat(x, y)
@@ -156,7 +173,7 @@ class Simulation:
                     symbol = "r"
                 else:
                     symbol = "T"
-                    
+
                 print(symbol, end="")
 
             print("")

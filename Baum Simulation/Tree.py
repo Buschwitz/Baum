@@ -13,3 +13,12 @@ class Tree:
 
     def __repr__(self):
         return self.info()
+
+    def __eq__(self, other):
+        return all([
+            self.height == other.height,
+            self.x == other.x,
+            self.dead == other.dead,
+            self.age == other.age,
+            self.decay == other.decay,
+            self.flash == other.flash ])
